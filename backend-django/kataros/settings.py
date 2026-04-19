@@ -10,8 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 from django.conf.global_settings import AUTHENTICATION_BACKENDS
 from dotenv import load_dotenv
@@ -29,9 +29,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Frontend integration settings
-FRONTEND_BUILD_DIR = Path(
-    os.getenv('FRONTEND_BUILD_DIR', BASE_DIR / 'frontend_dist')
-)
+FRONTEND_BUILD_DIR = Path(os.getenv('FRONTEND_BUILD_DIR', BASE_DIR / 'frontend_dist'))
 SERVE_FRONTEND = os.getenv('SERVE_FRONTEND', '1') == '1'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -44,9 +42,12 @@ SECRET_KEY = 'django-insecure-6=ge3yi&0o($-pdwrxpr6vinab#wi2g55p03xl-0@vymk*ko4&
 # Get the Google Maps API key from the environment variable
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = []
+allowed_hosts_env = os.getenv('DJANGO_ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_env.split(',') if host.strip()]
+if DEBUG and not ALLOWED_HOSTS:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -149,13 +150,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
     STATIC_DIR,
-    str(FRONTEND_BUILD_DIR / 'static'),
+    str(FRONTEND_BUILD_DIR),
 ]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
