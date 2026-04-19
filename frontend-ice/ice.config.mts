@@ -15,35 +15,11 @@ export default defineConfig(() => ({
         target: djangoTarget,
         changeOrigin: true,
       },
-      '/maps': {
-        target: djangoTarget,
-        changeOrigin: true,
-      },
       '/login': {
         target: djangoTarget,
         changeOrigin: true,
       },
       '/logout': {
-        target: djangoTarget,
-        changeOrigin: true,
-      },
-      '/socios': {
-        target: djangoTarget,
-        changeOrigin: true,
-      },
-      '/charts': {
-        target: djangoTarget,
-        changeOrigin: true,
-      },
-      '/settings': {
-        target: djangoTarget,
-        changeOrigin: true,
-      },
-      '/profile': {
-        target: djangoTarget,
-        changeOrigin: true,
-      },
-      '/media': {
         target: djangoTarget,
         changeOrigin: true,
       },

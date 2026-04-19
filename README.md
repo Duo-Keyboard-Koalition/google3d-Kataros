@@ -2,6 +2,11 @@
 
 This repo uses Django for backend and static hosting, and Ice for frontend.
 
+The Django app is intentionally minimal and uses native Django authentication only:
+
+- Login
+- Logout
+
 ## Frontend Modes
 
 - Development: run Ice dev server and proxy Django routes through Ice.
@@ -12,7 +17,7 @@ This repo uses Django for backend and static hosting, and Ice for frontend.
 1. Start Django:
 
    - `cd backend-django`
-   - `python manage.py runserver`
+   - `uv run --with-requirements requirements.app.txt python manage.py runserver`
 
 2. Start Ice frontend:
 
@@ -22,7 +27,7 @@ This repo uses Django for backend and static hosting, and Ice for frontend.
 
 3. Open the Ice dev URL shown in terminal (usually http://localhost:3333).
 
-The Ice config proxies backend paths like `/admin`, `/maps`, `/login`, `/logout`, `/media`, and `/static` to Django.
+The Ice config proxies backend paths like `/admin`, `/login`, `/logout`, and `/static` to Django.
 
 ## Production Build and Serve Through Django
 
@@ -39,11 +44,36 @@ The Ice config proxies backend paths like `/admin`, `/maps`, `/login`, `/logout`
 3. Run Django in production mode and collect static files:
 
    - `cd backend-django`
-   - `python manage.py collectstatic --noinput`
+   - `uv run --with-requirements requirements.app.txt python manage.py collectstatic --noinput`
 
 4. Django serves the frontend app at:
 
    - `/app/`
+
+5. Django auth routes:
+
+   - Login: `/login/`
+   - Logout: `/logout/`
+   - Auth home (requires login): `/`
+
+## One-Command Production Run (PowerShell)
+
+From the repository root:
+
+- `./run-production.ps1`
+
+Optional parameters:
+
+- `./run-production.ps1 -HostAddress 0.0.0.0 -Port 8000 -AllowedHosts "127.0.0.1,localhost"`
+
+This script does all production steps:
+
+- Installs frontend dependencies
+- Builds Ice frontend
+- Sets Django production environment variables
+- Runs migrations with `uv`
+- Runs collectstatic with `uv`
+- Starts Django server with `uv`
 
 ## Notes
 

@@ -25,8 +25,6 @@ PROJECT_ROOT = BASE_DIR.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 DATA_DIR = os.path.join(BASE_DIR, 'data')
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Frontend integration settings
 FRONTEND_BUILD_DIR = Path(os.getenv('FRONTEND_BUILD_DIR', BASE_DIR / 'frontend_dist'))
@@ -39,8 +37,6 @@ SECRET_KEY = 'django-insecure-6=ge3yi&0o($-pdwrxpr6vinab#wi2g55p03xl-0@vymk*ko4&
 # Add this to your settings.py
 
 
-# Get the Google Maps API key from the environment variable
-GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', '1') == '1'
 
@@ -60,8 +56,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'home',
-    'map_page',
 ]
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -100,8 +94,8 @@ TEMPLATES = [
 ]
 # Ensure these are set
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = '/'  # Redirect to home after login
-LOGOUT_REDIRECT_URL = 'home'  # Redirect to login after logout
+LOGIN_REDIRECT_URL = '/'  # Redirect to auth home after login
+LOGOUT_REDIRECT_URL = '/login/'  # Redirect to login after logout
 
 WSGI_APPLICATION = 'kataros.wsgi.application'
 

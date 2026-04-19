@@ -1,0 +1,26 @@
+{
+  "publicPath": "/",
+  "entries": {
+    "main": [
+      "js/framework.js",
+      "js/59.js",
+      "css/main.css",
+      "js/main.js"
+    ]
+  },
+  "pages": {
+    "dashboard": [
+      "js/p_dashboard.js"
+    ],
+    "signin": [
+      "js/p_signin.js"
+    ],
+    "signup": [
+      "js/p_signup.js"
+    ],
+    "index": [
+      "js/p_index.js"
+    ]
+  },
+  "assets": {}
+}

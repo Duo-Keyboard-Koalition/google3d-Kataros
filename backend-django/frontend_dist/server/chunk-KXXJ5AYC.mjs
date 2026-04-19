@@ -1,0 +1,2 @@
+import { createRequire } from 'module';const require = createRequire(import.meta.url);
+var e="ice_demo_auth",t="ice_demo_user";function n(){return typeof window>"u"?!1:window.localStorage.getItem(e)==="true"}function r(){return typeof window>"u"?"":window.localStorage.getItem(t)||"User"}function i(o){typeof window>"u"||(window.localStorage.setItem(e,"true"),window.localStorage.setItem(t,o||"User"))}function d(){typeof window>"u"||(window.localStorage.removeItem(e),window.localStorage.removeItem(t))}export{n as a,r as b,i as c,d};
