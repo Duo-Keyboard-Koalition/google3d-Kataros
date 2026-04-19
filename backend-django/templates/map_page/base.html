@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kataros{% endblock %}</title>
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'css/map_page/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/map_page/map.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    
+    <nav id="sidebar">
+        <div class="navbar-brand">Kataros</div>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}"><i class="bi bi-house-door"></i> Home</a>
+            </li>
+            <hr>
+        </ul>
+        <button id="sidebarToggle" class="btn btn-light">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        {%block menu %}{% endblock %}
+    </nav>
+
+    <div id="content">
+
+        <main class="container-fluid">
+            {% block content %}{% endblock %}
+        </main>
+
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="{% static 'js/map_page/base.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

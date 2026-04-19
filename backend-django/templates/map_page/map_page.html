@@ -1,0 +1,84 @@
+{% extends "map_page/base.html" %}
+{% load static %}
+
+{% block title %}Kataros | 3D Map{% endblock %}
+
+{% block menu %}
+<ul class="nav flex-column">
+    <li class="nav-item mb-3">
+        <div class="card bg-light">
+            <div class="card-body py-2">
+                <h6 class="card-title mb-1">3D Maps</h6>
+                <p class="card-text small mb-0">Explore interactive 3D maps with real-time updates and custom views.</p>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item mb-2">
+        <button id="myLocationButton" class="btn btn-primary w-100 d-flex align-items-center justify-content-center" type="button">
+            <span class="button-content">
+                <i class="bi bi-geo-alt me-2"></i>
+                <span>My Location</span>
+            </span>
+            <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+        </button>
+    </li>
+    <li class="nav-item mb-3 d-flex justify-content-center">
+        
+        <div class="form-check form-switch">
+            <label class="form-check-label" for="labelsToggle">Show Labels</label>
+            <input class="form-check-input" type="checkbox" id="labelsToggle" checked>
+            
+        </div>
+    </li>
+</ul>
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div id="map-container"></div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/map_page/map.js' %}"></script>
+<script src="{% static 'js/map_page/mylocation.js' %}"></script>
+<script>
+    (g => { var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window; b = b[c] || (b[c] = {}); var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => { await (a = m.createElement("script")); e.set("libraries", [...r] + ""); for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]); e.set("callback", c + ".maps." + q); a.src = `https://maps.${c}apis.com/maps/api/js?` + e; d[q] = f; a.onerror = () => h = n(Error(p + " could not load.")); a.nonce = m.querySelector("script[nonce]")?.nonce || ""; m.head.append(a) })); d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)) })({
+        key: "{{ google_maps_api_key }}",
+        v: "alpha",
+        // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+        // Add other bootstrap parameters as needed, using camel case.
+    });
+</script>
+<script type="text/javascript">
+    console.log("{{ lat }}");
+    console.log("{{ lng }}");
+    init({{ lat }}, {{ lng  }}, {{ altitude }}, {{ heading }}, {{ tilt }}, {{ range }}, {{my_location}}, {{showLabels}});
+
+</script>
+
+<!-- Custom JavaScript -->
+<script>
+$(document).ready(function() {
+    const $labelsToggle = $('#labelsToggle');
+
+
+    $labelsToggle.on('change', function() {
+        console.log($labelsToggle);
+        const $map = $("gmp-map-3d").first();
+        console.log($map[0]);
+
+        if (this.checked) {
+            console.log('Toggle switch is ON');
+            $map.removeAttr('default-labels-disabled');
+        } else {
+            console.log('Toggle switch is OFF');
+            $map.attr('default-labels-disabled', '');
+        }
+    });
+});
+</script>
+{% endblock %}

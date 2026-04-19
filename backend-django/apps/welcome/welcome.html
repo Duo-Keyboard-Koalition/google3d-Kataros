@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Kataros | Welcome{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <h1 class="card-title mb-4">Welcome to Kataros</h1>
+                    <p class="card-text lead">Explore our interactive 3D maps and discover the world from a new perspective.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'home' %}" class="btn btn-primary btn-lg me-2">
+                            <i class="bi bi-info-circle"></i> Learn More
+                        </a>
+                        <a href="{% url 'map' %}" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-map"></i> View 3D Map
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const card = document.querySelector('.card');
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100);
+    });
+</script>
+{% endblock %}

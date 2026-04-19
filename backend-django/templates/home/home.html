@@ -1,0 +1,236 @@
+{% extends "home/base.html" %}
+{% load static %}
+
+{% block title %}Welcome to Kataros{% endblock %}
+
+{% block home_content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body text-center">
+                    <h1 class="card-title mb-4">Welcome to Kataros</h1>
+                    <p class="card-text lead mb-4">Explore our interactive 3D map experience</p>
+                    <div class="mb-3">
+                        <input id="autocomplete" class="form-control" type="text" placeholder="Enter a location">
+                    </div>
+                    <button id="viewMapButton" class="btn btn-primary btn-lg">
+                        <i class="bi bi-map me-2"></i> View 3D Map
+                    </button>
+                    <div id="loadingMessage" class="mt-3 d-none">
+                        <div class="globe-loader" role="status">
+                            <p id="loadingQuote" class="mt-2 text-muted">Bootstrapping your adventure...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="accordion" id="featureAccordion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Interactive 3D Maps
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#featureAccordion">
+                        <div class="accordion-body">
+                            Explore our cutting-edge 3D maps with intuitive controls and stunning visuals.
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Real-time Updates
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                        data-bs-parent="#featureAccordion">
+                        <div class="accordion-body">
+                            Get the latest information with our real-time data updates and live tracking features.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div id="featureCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="https://via.placeholder.com/600x400.png?text=3D+Map+Feature" class="d-block w-100"
+                            alt="3D Map Feature">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="https://via.placeholder.com/600x400.png?text=Real-time+Updates" class="d-block w-100"
+                            alt="Real-time Updates">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#featureCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#featureCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=places&callback=initAutocomplete" async defer></script>
+<script>
+let autocomplete;
+let selectedPlace = null;
+
+function initAutocomplete() {
+    autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById('autocomplete'),
+        {
+            //types: ['establishment'],
+            //componentRestrictions: {'country': ['AU']},
+            //fields: ['place_id', 'geometry', 'name']
+        }
+    );
+
+    autocomplete.addListener('place_changed', onPlaceChanged);
+}
+
+function onPlaceChanged() {
+    selectedPlace = autocomplete.getPlace();
+}
+
+$(document).ready(function() {
+    $('#viewMapButton').on('click', function() {
+        $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+        $('#loadingMessage').removeClass('d-none');
+        redirectToMapWithLocation();
+    });
+});
+
+function redirectToMapWithLocation() {
+    console.log("redirectToMapWithLocation");
+    if (selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location) {
+        const lat = selectedPlace.geometry.location.lat();
+        const lon = selectedPlace.geometry.location.lng();
+        const mapUrl = `{% url 'maps' %}?lat=${lat}&lng=${lon}`;
+        window.location.href = mapUrl;
+    } else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                const mapUrl = `{% url 'maps' %}?lat=${lat}&lng=${lon}`;
+                window.location.href = mapUrl;
+            },
+            function(error) {
+                console.error("Error getting location:", error);
+                window.location.href = "{% url 'maps' %}";
+            }
+        );
+    } else {
+        console.error("Geolocation is not supported by this browser.");
+        window.location.href = "{% url 'maps' %}";
+    }
+}
+</script>
+<script>
+    // Array of lighthearted digital nomad-themed quotes
+    const loadingQuotes = [
+        "Packing virtual bags...",
+        "Charging laptop batteries worldwide...",
+        "Connecting to global WiFi...",
+        "Plotting course on digital map...",
+        "Brewing coffee in a new timezone...",
+        "Syncing wanderlust...",
+        "Downloading adventure...",
+        "Calculating passport stamps...",
+        "Optimizing work-life balance...",
+        "Rendering dream destinations...",
+        "Uploading nomadic spirit...",
+        "Triangulating freedom coordinates...",
+        "Compiling travel memories...",
+        "Generating wanderlust algorithm...",
+        "Mapping out next destination..."
+    ];
+
+    function updateLoadingQuote() {
+        const quoteElement = document.getElementById('loadingQuote');
+        if (quoteElement) {
+            const randomQuote = loadingQuotes[Math.floor(Math.random() * loadingQuotes.length)];
+            quoteElement.textContent = randomQuote;
+        }
+    }
+
+    // Modify the existing redirectToMapWithLocation function to update the quote
+    function redirectToMapWithLocation() {
+        // Update quote when loading starts
+        updateLoadingQuote();
+
+        console.log("redirectToMapWithLocation");
+        if (selectedPlace && selectedPlace.geometry && selectedPlace.geometry.location) {
+            const lat = selectedPlace.geometry.location.lat();
+            const lon = selectedPlace.geometry.location.lng();
+            const mapUrl = `{% url 'maps' %}?lat=${lat}&lng=${lon}`;
+            window.location.href = mapUrl;
+        } else if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const mapUrl = `{% url 'maps' %}?lat=${lat}&lng=${lon}`;
+                    window.location.href = mapUrl;
+                },
+                function(error) {
+                    console.error("Error getting location:", error);
+                    window.location.href = "{% url 'maps' %}";
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+            window.location.href = "{% url 'maps' %}";
+        }
+    }
+
+    // Optional: Update quote periodically while loading
+    $(document).ready(function() {
+        $('#viewMapButton').on('click', function() {
+            $(this).prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+            $('#loadingMessage').removeClass('d-none');
+            
+            // Start periodic quote updates
+            const quoteInterval = setInterval(updateLoadingQuote, 2000);
+            
+            // Stop interval when navigation occurs
+            window.addEventListener('beforeunload', () => {
+                clearInterval(quoteInterval);
+            });
+        });
+    });
+</script>
+
+<style>
+    #loadingQuote {
+        font-style: italic;
+        animation: fadeInOut 2s ease-in-out infinite;
+    }
+
+    @keyframes fadeInOut {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+    }
+</style>
+{% endblock %}
